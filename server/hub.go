@@ -1,6 +1,10 @@
 package server
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/gorilla/websocket"
+)
 
 type Hub struct {
 	clients    map[*Client]struct{}
@@ -32,6 +36,12 @@ func (h *Hub) run() {
 			if _, ok := h.clients[client]; ok {
 				delete(h.clients, client)
 				client.conn.Close()
+			}
+			h.mutex.Unlock()
+		case message := <-h.broadcast:
+			h.mutex.Lock()
+			for key, _ := range h.clients {
+				key.conn.WriteMessage(websocket.TextMessage, message)
 			}
 			h.mutex.Unlock()
 		}
