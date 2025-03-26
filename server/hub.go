@@ -40,7 +40,7 @@ func (h *Hub) run() {
 			h.mutex.Unlock()
 		case message := <-h.broadcast:
 			h.mutex.Lock()
-			for key, _ := range h.clients {
+			for key := range h.clients {
 				key.conn.WriteMessage(websocket.TextMessage, message)
 			}
 			h.mutex.Unlock()
