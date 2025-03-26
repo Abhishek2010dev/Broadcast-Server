@@ -30,7 +30,6 @@ func (h *Hub) run() {
 			h.mutex.Lock()
 			h.clients[client] = struct{}{}
 			h.mutex.Unlock()
-
 		case client := <-h.unregister:
 			h.mutex.Lock()
 			if _, ok := h.clients[client]; ok {
