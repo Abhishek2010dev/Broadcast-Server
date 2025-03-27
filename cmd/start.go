@@ -10,7 +10,8 @@ import (
 
 func StartCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "This command will start the server",
+		Use:   "start",
+		Short: "This command will start the server",
 		Run: func(cmd *cobra.Command, args []string) {
 			hub := server.NewHub()
 			go hub.Run()
