@@ -11,7 +11,7 @@ type Hub struct {
 	broadcast  chan []byte
 	register   chan *Client
 	unregister chan *Client
-	mutex      sync.Mutex
+	mutex      sync.RWMutex
 }
 
 func NewHub() *Hub {

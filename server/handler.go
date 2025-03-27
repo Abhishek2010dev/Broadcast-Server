@@ -38,7 +38,6 @@ func HandleConnections(hub *Hub) http.HandlerFunc {
 				break
 			}
 			hub.broadcast <- message
-
 		}
 	}
 }
