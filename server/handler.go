@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -56,7 +57,8 @@ func HandleConnections(hub *Hub) http.HandlerFunc {
 				log.Printf("Read error from %s: %v\n", username, err)
 				break
 			}
-			hub.broadcast <- message
+			formatMessage := fmt.Sprintf("%s: %s", username, message)
+			hub.broadcast <- []byte(formatMessage)
 		}
 	}
 }
