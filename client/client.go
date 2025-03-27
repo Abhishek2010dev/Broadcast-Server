@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"bufio"
@@ -11,7 +11,7 @@ import (
 
 const serverAddress = "ws://localhost:3000/ws"
 
-func connectWebSocket(username string) (*websocket.Conn, error) {
+func ConnectWebSocket(username string) (*websocket.Conn, error) {
 	serverURL := fmt.Sprintf("%s?username=%s", serverAddress, username)
 	conn, _, err := websocket.DefaultDialer.Dial(serverURL, nil)
 	if err != nil {
@@ -21,7 +21,7 @@ func connectWebSocket(username string) (*websocket.Conn, error) {
 	return conn, nil
 }
 
-func readMessages(conn *websocket.Conn, username string) {
+func ReadMessages(conn *websocket.Conn, username string) {
 	for {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
@@ -38,7 +38,7 @@ func readMessages(conn *websocket.Conn, username string) {
 	}
 }
 
-func writeMessages(conn *websocket.Conn, username string) {
+func WriteMessages(conn *websocket.Conn, username string) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("\n[You] (Type message): ")
@@ -57,17 +57,3 @@ func writeMessages(conn *websocket.Conn, username string) {
 		}
 	}
 }
-
-// func main() {
-// 	username := "testuser"
-// 	conn, err := connectWebSocket(username)
-// 	if err != nil {
-// 		log.Fatal("Connection error:", err)
-// 	}
-// 	defer conn.Close()
-//
-// 	go readMessages(conn, username)
-// 	writeMessages(conn, username)
-//
-// 	log.Println("Disconnected from server")
-// }
