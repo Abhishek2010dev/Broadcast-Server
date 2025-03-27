@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Broadcast-Server/common"
 	"github.com/gorilla/websocket"
 )
 
@@ -25,15 +26,18 @@ func HandleConnections(hub *Hub) http.HandlerFunc {
 			log.Println("Upgrade error:", err)
 			return
 		}
-		defer conn.Close()
 
+		hub.mutex.Lock()
 		for client := range hub.clients {
 			if username == strings.ToLower(client.username) {
-				conn.WriteMessage(websocket.TextMessage, []byte("Username already exists"))
+				hub.mutex.Unlock()
+				websocketError, _ := common.NewWebsocketError("Username already taken").ToJson()
+				conn.WriteMessage(websocket.TextMessage, websocketError)
 				conn.Close()
 				return
 			}
 		}
+		hub.mutex.Unlock()
 
 		client := &Client{conn: conn, username: username}
 		hub.register <- client
@@ -41,12 +45,15 @@ func HandleConnections(hub *Hub) http.HandlerFunc {
 		defer func() {
 			hub.unregister <- client
 			client.conn.Close()
+			log.Printf("Client %s disconnected\n", username)
 		}()
+
+		log.Printf("Client %s connected\n", username)
 
 		for {
 			_, message, err := conn.ReadMessage()
 			if err != nil {
-				log.Println("Read error:", err)
+				log.Printf("Read error from %s: %v\n", username, err)
 				break
 			}
 			hub.broadcast <- message

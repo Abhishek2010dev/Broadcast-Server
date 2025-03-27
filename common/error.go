@@ -1,4 +1,4 @@
-package types
+package common
 
 import (
 	"encoding/json"
@@ -15,12 +15,12 @@ func NewWebsocketError(message string) *WebsocketError {
 	}
 }
 
-func (w *WebsocketError) ToJson() (string, error) {
+func (w *WebsocketError) ToJson() ([]byte, error) {
 	data, err := json.Marshal(w)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(data), err
+	return data, err
 }
 
 // For client side
