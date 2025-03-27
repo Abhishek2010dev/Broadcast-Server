@@ -6,4 +6,5 @@ func Init() {
 	rootCmd := cobra.Command{}
 	rootCmd.AddCommand(StartCommand())
 	rootCmd.AddCommand(ConnectCommand())
+	rootCmd.Execute()
 }
