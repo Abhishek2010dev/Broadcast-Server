@@ -58,16 +58,16 @@ func writeMessages(conn *websocket.Conn, username string) {
 	}
 }
 
-func main() {
-	username := "testuser"
-	conn, err := connectWebSocket(username)
-	if err != nil {
-		log.Fatal("Connection error:", err)
-	}
-	defer conn.Close()
-
-	go readMessages(conn, username)
-	writeMessages(conn, username)
-
-	log.Println("Disconnected from server")
-}
+// func main() {
+// 	username := "testuser"
+// 	conn, err := connectWebSocket(username)
+// 	if err != nil {
+// 		log.Fatal("Connection error:", err)
+// 	}
+// 	defer conn.Close()
+//
+// 	go readMessages(conn, username)
+// 	writeMessages(conn, username)
+//
+// 	log.Println("Disconnected from server")
+// }
